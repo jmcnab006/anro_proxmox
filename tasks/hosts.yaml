@@ -1,0 +1,8 @@
+  # check if we are a cluster or a cluster member
+---
+- name: HOSTS | Update /etc/hosts
+  ansible.builtin.template:
+    src: hosts.j2
+    dest: /etc/hosts
+    mode: "0644"
+  become: true

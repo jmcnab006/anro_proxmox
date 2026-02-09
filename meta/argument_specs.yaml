@@ -1,0 +1,177 @@
+---
+argument_specs:
+  main:
+    short_description: 'Install and configure baseline utilities and settings on proxmox servers'
+    description: >
+      Installs packages, sets hostname, configures clustering for proxmox.
+    author: Jeremy McNab
+    options:
+      # Subscription / Licensing
+      anro_proxmox_enterprise_license:
+        type: 'bool'
+        default: false
+        description: 'Flag to set no-subscription repo for packages.'
+
+      # APT / Updates
+      anro_proxmox_apply_updates:
+        type: 'bool'
+        default: false
+        description: 'Flag to determine if packages should be updated.'
+
+      anro_proxmox_keyring:
+        type: 'str'
+        default: '/usr/share/keyrings/proxmox-archive-keyring.gpg'
+        description: 'List of default packages that should be installed on every server.'
+
+      # Packages
+      anro_proxmox_packages_default:
+        type: 'list'
+        elements: 'str'
+        default:
+          - openvswitch-switch
+          - python3-pexpect
+          - snmpd
+          - jq
+        description: 'List of additional packages that should be installed on every server.'
+
+      anro_proxmox_packages_add:
+        type: 'list'
+        default: []
+        description: 'List of additional packages that should be installed on every server.'
+
+      anro_proxmox_packages_remove:
+        type: 'list'
+        default: []
+        description: 'List of packages that should be removed from every server.'
+
+      anro_proxmox_packages_update:
+        type: 'bool'
+        default: false
+        description: 'Bool to determine if packages that should be updated at runtime from every server.'
+      # Ceph
+      anro_proxmox_ceph_enabled:
+        type: 'bool'
+        default: false
+        description: 'Flag to determine if CEPH should be installed.'
+
+      anro_proxmox_ceph_repository:
+        type: 'str'
+        default: 'no-subscription'
+        choices:
+          - 'no-subscription'
+          - 'enterprise'
+          - 'manual'
+          - 'test'
+        description: 'Specify which repository CEPH will get installed from using pvecm install command.'
+
+      anro_proxmox_ceph_version:
+        type: 'str'
+        default: 'squid'
+        choices:
+          - 'squid'
+      # Networking
+      anro_proxmox_host_octet:
+        type: 'str'
+        description: 'Computed from ansible_host; no static default'
+
+      anro_proxmox_interfaces:
+        type: 'list'
+        elements: 'dict'
+        default: []
+        description: 'List of interface definitions.'
+
+      anro_proxmox_pve_network:
+        type: 'str'
+        default: '172.16.0.0'
+        description: 'PVE network used if clustering is enabled.'
+
+      anro_proxmox_pve_network_mask:
+        type: 'str'
+        default: '24'
+        description: 'PVE network used if clustering is enabled.'
+
+      anro_proxmox_pve_network_address:
+        type: 'str'
+        description: 'Computed from network + octet; no static default'
+
+      # Hosts & Domains
+      anro_proxmox_tld:
+        type: 'str'
+        default: 'bridgelinetech.com'
+        description: 'TLD to provide for hosts file. Deprecated in favor of anro_proxmox_hosts_domains.'
+
+      anro_proxmox_hosts_domains:
+        type: 'list'
+        elements: 'str'
+        default:
+          - '{{ anro_proxmox_tld }}'
+        description: 'List of TLD to provide for hosts file.'
+
+      anro_proxmox_hosts_groups:
+        type: 'list'
+        elements: 'str'
+        default:
+          - '{{ group_names[0] }}'
+        description: 'List of group members to add to hosts file, defaults to group 0 members.'
+
+      anro_proxmox_hosts_list:
+        type: 'list'
+        elements: 'str'
+        default: []
+        description: 'List manual hosts file entries'
+
+      anro_proxmox_ipv4_var:
+        type: 'str'
+        default: '{{ anro_proxmox_pve_network_address }}'
+        description: 'Default hostvar to use as address for hosts file.'
+
+      # Cluster
+      anro_proxmox_cluster_enabled:
+        type: 'bool'
+        default: 'false'
+        description: 'Bool to determine if clustering should be enabled and if joinable.'
+
+      anro_proxmox_cluster_join:
+        type: 'bool'
+        default: false
+        description: 'Bool to determine if cluster nodes should try and join cluster.'
+
+      anro_proxmox_cluster_name:
+        type: 'str'
+        default: 'pve-cluster'
+        description: 'String name for the cluster.'
+
+      anro_proxmox_cluster_fingerprint:
+        type: 'str'
+        default: ''
+        description: 'String fingerprint from cluster master, to allow joining the cluster.'
+
+      anro_proxmox_cluster_master:
+        type: 'str'
+        default: ''
+        description: 'String ip addresss from cluster master, to allow joining the cluster.'
+
+      # Routing
+      anro_proxmox_custom_routes:
+        type: 'list'
+        elements: 'dict'
+        default: []
+
+      # Misc
+      anro_proxmox_force_reload:
+        type: bool
+        default: false
+
+      # SNNP
+      anro_proxmox_snmpd:
+        type: 'dict'
+        default: {}
+        description: 'Configuration defaults speficied from the defaults.'
+
+      # NTP
+      anro_proxmox_timezone:
+        type: 'str'
+        default: 'America/Chicago'
+      anro_proxmox_timeserver:
+        type: 'str'
+        default: 'pool.ntp.org'

@@ -1,0 +1,15 @@
+---
+- name: Reload anro_proxmox network
+  ansible.builtin.command: 'ifreload -a'
+  changed_when: false
+
+- name: Restart anro_proxmox snmpd
+  ansible.builtin.service:
+    name: 'snmpd'
+    state: 'restarted'
+
+- name: Restart anro_proxmox chrony
+  ansible.builtin.service:
+    name: 'chrony'
+    state: 'restarted'
+...

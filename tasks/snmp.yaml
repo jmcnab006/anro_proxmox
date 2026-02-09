@@ -1,0 +1,32 @@
+- name: SNMP | Install snmpd packages
+  ansible.builtin.apt:
+    name: snmpd
+    state: present
+  tags:
+    - install
+    - packages
+  notify:
+    - "Restart anro_proxmox snmpd"
+
+- name: SNMP | Apply snmpd config
+  ansible.builtin.template:
+    src: snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - "Restart anro_proxmox snmpd"
+
+# https://forum.proxmox.com/threads/snmpd-2644-systemstats_linux-unexpected-header-length-in-proc-net-snmp-237-224.146957/#post-677327
+#
+- name: SNMP | Fix unexpected header length spam
+  ansible.builtin.copy:
+    dest: "/etc/rsyslog.d/ansible_ignore_systemstats_header.conf"
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      :msg, contains, "systemstats_linux: unexpected header length in /proc/net/snmp" ~
+  notify:
+    - "Restart anro_proxmox snmpd"

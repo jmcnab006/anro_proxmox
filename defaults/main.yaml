@@ -1,0 +1,102 @@
+# SUBSCRIPTION OR NO
+anro_proxmox_enterprise_license: false
+
+# APT/UPDATES
+anro_proxmox_apply_updates: false
+anro_proxmox_keyring: /usr/share/keyrings/proxmox-archive-keyring.gpg
+
+# PACKAGES
+anro_proxmox_packages_default:
+  - openvswitch-switch
+  - python3-pexpect
+  - jq
+
+anro_proxmox_packages_add: []
+anro_proxmox_packages_remove: []
+anro_proxmox_packages_update: false
+# anro_proxmox_packages_autostart: false
+
+
+# CEPH INSTALL
+anro_proxmox_ceph_enabled: false
+anro_proxmox_ceph_repository: 'no-subscription'
+anro_proxmox_ceph_version: 'squid'
+
+# BUILD OUR HOST ID BASED ON LAST OCTET TO USE FOR PVE ADDRESS OR OTHER USES
+anro_proxmox_host_octet: "{{ ansible_host | split('.') | last }}"
+anro_proxmox_interfaces: []
+# Example:
+# anro_proxmox_interfaces:
+#  #management
+#  - name: eno5
+#    address: "{{ ansible_host }}"
+#    netmask: 255.255.255.0
+#    gateway: 10.255.255.1
+#    family: inet
+#    method: static
+#    comment: "out of band management network"
+#  - name: eno6
+#  - name: ens7f0
+#  - name: ens7f1
+#  - name: vmk0
+#    method: static
+#    address: "172.16.65.{{ anro_proxmox_host_octet }}/24"
+#    ovs_type: OVSIntPort
+#    ovs_bridge: vmbr0
+#    ovs_options: tag=1065
+#    comment: "pve cluster network"
+
+anro_proxmox_pve_network: "172.16.0.0"
+anro_proxmox_pve_network_mask: "24"
+anro_proxmox_pve_network_address: "{{ anro_proxmox_pve_network.split('.')[:3] | join('.') }}.{{ anro_proxmox_host_octet }}"
+
+# HOSTS and DOMAINS
+anro_proxmox_tld: 'bridgelinetech.com'
+anro_proxmox_hosts_domains:
+  - "{{ anro_proxmox_tld }}"
+
+anro_proxmox_hosts_groups: ["{{ group_names[0] }}"]
+anro_proxmox_hosts_list: []
+
+# DEFAULT OUR hostvar to anro_proxmox_pve_network_address or ansible_host
+anro_proxmox_ipv4_var: "{{ anro_proxmox_pve_network_address | default('ansible_host') }}"
+anro_proxmox_ipv6_var: "{{ undef() }}"
+
+
+# CLUSTER configuration
+anro_proxmox_cluster_enabled: false
+anro_proxmox_cluster_join: false
+anro_proxmox_cluster_name: "pve-cluster"
+anro_proxmox_cluster_fingerprint: ""
+anro_proxmox_cluster_master: ""
+anro_proxmox_cluster_nodes: []
+
+# SPECIAL ROUTING - Todo
+anro_proxmox_custom_routes: []
+# Example:
+# anro_proxmox_custom_routes:
+#   - destination: "10.0.0.0/24"
+#     gateway: "192.168.1.254"
+#     interface: "vmbr1"
+
+anro_proxmox_force_reload: false
+
+anro_proxmox_snmpd: {}
+anro_proxmox_snmpd_defaults:
+  enabled: false
+  sys_location: "Rack00"
+  sys_contact: "Bridgeline Tech <admin@bridgelinetech.com>"
+  sys_services: "72"
+  loopback: 127.0.0.1
+  listen_addresses:
+    - "{{ ansible_host }}"
+  rules:
+    - address: 127.0.0.1
+      community: public
+      access: rocommunity
+  custom: []
+
+anro_proxmox_snmpd_config: "{{ anro_proxmox_snmpd_defaults | ansible.builtin.combine(anro_proxmox_snmpd, recursive=true) }}"
+
+anro_proxmox_timezone: America/Chicago
+anro_proxmox_timeserver: pool.ntp.org

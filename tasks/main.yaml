@@ -1,0 +1,53 @@
+# anro_proxmox/tasks/main.yml
+# Main task file for Proxmox cluster configuration
+
+- name: "Setup SYSTEM"
+  ansible.builtin.include_tasks: "system.yaml"
+  tags:
+    - system
+    - proxmox
+
+- name: "Configure repositories"
+  ansible.builtin.include_tasks: "repositories.yaml"
+  tags:
+    - repositories
+    - proxmox
+
+- name: "Update system packages"
+  ansible.builtin.include_tasks: "packages.yaml"
+  tags:
+    - packages
+    - proxmox
+
+- name: "Configure hosts file"
+  ansible.builtin.include_tasks: "hosts.yaml"
+  tags:
+    - hosts
+    - proxmox
+
+- name: "Configure network interfaces"
+  ansible.builtin.include_tasks: "network.yaml"
+  tags:
+    - network
+    - proxmox
+
+- name: "Configure cluster"
+  when: anro_proxmox_cluster_enabled | bool
+  ansible.builtin.include_tasks: "cluster.yaml"
+  tags:
+    - cluster
+    - proxmox
+
+- name: "Install CEPH"
+  when: anro_proxmox_ceph_enabled | bool
+  ansible.builtin.include_tasks: "ceph.yaml"
+  tags:
+    - cluster
+    - proxmox
+
+- name: "Install SNMP"
+  when: anro_proxmox_snmpd.enabled | bool
+  ansible.builtin.include_tasks: "snmp.yaml"
+  tags:
+    - snmp
+    - proxmox

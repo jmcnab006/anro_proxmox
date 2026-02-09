@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  role_name: anro_proxmox
+  namespace: anro
+  author: Jeremy McNab
+  license: Proprietary
+  description: Install and configure baseline utilities and settings on proxmox servers
+  min_ansible_version: "2.8"
+dependencies: []

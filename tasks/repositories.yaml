@@ -1,0 +1,54 @@
+# anro_proxmox/tasks/repositories.yml
+# Configure Proxmox repositories
+# unused at the moment due to conflict in packages\
+
+# --- COMMUNITY REPO ---
+
+- name: REPO | Enable/Disable Proxmox pve-no-subscription repo {{ not anro_proxmox_enterprise_license }}
+  ansible.builtin.deb822_repository:
+    name: proxmox
+    enabled: "{{ not anro_proxmox_enterprise_license | bool }}"
+    types: deb
+    uris: http://download.proxmox.com/debian/pve
+    suites: "{{ ansible_distribution_release }}"
+    components:
+      - pve-no-subscription
+    signed_by: "{{ anro_proxmox_keyring }}"
+
+- name: REPO | Enable/Disable ceph-squid no-subscription repo {{ not anro_proxmox_enterprise_license }}
+  ansible.builtin.deb822_repository:
+    name: ceph
+    enabled: "{{ not anro_proxmox_enterprise_license | bool }}"
+    types: deb
+    uris: http://download.proxmox.com/debian/ceph-squid
+    suites: "{{ ansible_distribution_release }}"
+    components:
+      - no-subscription
+    signed_by: "{{ anro_proxmox_keyring }}"
+  when: anro_proxmox_ceph_enabled | bool
+
+# --- ENTERPRISE REPO ---
+
+- name: REPO | Enable/Disable Proxmox pve-enterprise repo {{ anro_proxmox_enterprise_license }}
+  ansible.builtin.deb822_repository:
+    name: pve-enterprise
+    enabled: "{{ anro_proxmox_enterprise_license | bool }}"
+    types: deb
+    uris: https://enterprise.proxmox.com/debian/pve
+    suites: "{{ ansible_distribution_release }}"
+    components:
+      - pve-enterprise
+    signed_by: "{{ anro_proxmox_keyring }}"
+  changed_when: false
+
+- name: REPO | Enable/Disable ceph-squid pve-enterprise repo {{ anro_proxmox_enterprise_license }}
+  ansible.builtin.deb822_repository:
+    name: ceph-enterprise
+    enabled: "{{ anro_proxmox_enterprise_license | bool }}"
+    types: deb
+    uris: https://enterprise.proxmox.com/debian/ceph-squid
+    suites: "{{ ansible_distribution_release }}"
+    components:
+      - pve-enterprise
+    signed_by: "{{ anro_proxmox_keyring }}"
+  when: anro_proxmox_ceph_enabled | bool

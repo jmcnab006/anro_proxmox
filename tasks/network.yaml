@@ -1,0 +1,30 @@
+# oa_proxmox/tasks/network.yml
+# Configure network interfaces based on variable structure
+# It might be required to remove the .link files in rm /usr/local/lib/systemd/network/ 
+# since they create nic0-nicX but this isn't based on any order and can change based
+# on the host. Removing them makes them consistent in kernel naming. This in turn 
+# ensures that the configuration per host is the same for same hardware types. 
+
+- name: NETWORK | Set hosts file entry
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^{{ inventory_hostname }}\s'
+    line: "{{ ansible_host }} {{ inventory_hostname }}"
+    owner: 'root'
+    group: 'root'
+    mode: '644'
+    state: absent
+    create: true
+
+- name: NETWORK | Create ifupdown configuration
+  ansible.builtin.template:
+    src: "interfaces.j2"
+    dest: "/etc/network/interfaces"
+    owner: 'root'
+    group: 'root'
+    mode: '644'
+    backup: true
+  notify: "Reload anro_proxmox network"
+
+- name: "Flush handlers to apply network config"
+  ansible.builtin.meta: flush_handlers

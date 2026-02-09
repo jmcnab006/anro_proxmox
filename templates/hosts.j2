@@ -1,0 +1,36 @@
+# Managed by Ansible
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+{% if anro_proxmox_hosts_ipv4_var is defined %}
+# Ansible IPv4 hosts entries
+{% for group in anro_proxmox_hosts_groups %}
+{% for item in groups[ group ] %}
+{{ hostvars[item][ anro_proxmox_hosts_ipv4_var ] }} {{ item }}{% if anro_proxmox_hosts_domains | length > 0 %}{% for d in anro_proxmox_hosts_domains %} {{ item }}.{{ d }}{% endfor %}{% endif +%}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if anro_proxmox_hosts_ipv6_var is defined %}
+# Ansible IPv6 hosts entries
+{% for group in anro_proxmox_hosts_groups %}
+{% for item in groups[ group ] %}
+{{ hostvars[item][ anro_proxmox_hosts_ipv6_var ] }} {{ item }}{% if anro_proxmox_hosts_domains | length > 0 %}{% for d in anro_proxmox_hosts_domains %} {{ item }}.{{ d }}{% endfor %}{% endif +%}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{%- if anro_proxmox_hosts_list is defined and anro_proxmox_hosts_list|length > 0 %}
+# Ansible manual hosts entries
+{% for item in anro_proxmox_hosts_list %}
+{{ item }}
+{% endfor %}
+{% endif %}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost   ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts

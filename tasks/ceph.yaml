@@ -1,0 +1,28 @@
+  # check if we are a cluster or a cluster member
+- name: CEPH | Check ceph status
+  ansible.builtin.stat:
+    path: /etc/ceph/ceph.conf
+  register: _anro_proxmox_ceph_status
+  tags:
+    - ceph
+
+- name: CLUSTER | Set our anro_proxmox_is_cluster to true or false
+  ansible.builtin.set_fact:
+    anro_proxmox_has_ceph: "{% if (_anro_proxmox_ceph_status.stat.exists) %}true{% else %}false{% endif %}"
+  tags:
+    - ceph
+
+- name: CLUSTER | Install CEPH Packages
+  ansible.builtin.apt:
+    name:
+      - ceph
+      - ceph-common
+      - ceph-fuse
+      - ceph-mds
+      - ceph-volume
+      - gdisk
+      - nvme-cli
+    state: present
+  when: not anro_proxmox_has_ceph and anro_proxmox_ceph_enabled | bool
+  tags:
+    - ceph
