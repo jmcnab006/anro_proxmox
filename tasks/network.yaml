@@ -26,5 +26,16 @@
     backup: true
   notify: "Reload anro_proxmox network"
 
+- name: NETWORK | Add custom route definitions
+  ansible.builtin.template:
+    src: "routes.j2"
+    dest: "/etc/network/interfaces.d/zz-routes"
+    owner: 'root'
+    group: 'root'
+    mode: '644'
+    backup: true
+  notify: "Reload anro_proxmox network"
+
+
 - name: "Flush handlers to apply network config"
   ansible.builtin.meta: flush_handlers

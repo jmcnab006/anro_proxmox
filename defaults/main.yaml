@@ -51,7 +51,7 @@ anro_proxmox_pve_network_mask: "24"
 anro_proxmox_pve_network_address: "{{ anro_proxmox_pve_network.split('.')[:3] | join('.') }}.{{ anro_proxmox_host_octet }}"
 
 # HOSTS and DOMAINS
-anro_proxmox_tld: 'bridgelinetech.com'
+anro_proxmox_tld: 'example.com'
 anro_proxmox_hosts_domains:
   - "{{ anro_proxmox_tld }}"
 
@@ -75,7 +75,7 @@ anro_proxmox_cluster_nodes: []
 anro_proxmox_custom_routes: []
 # Example:
 # anro_proxmox_custom_routes:
-#   - destination: "10.0.0.0/24"
+#   - network: "10.0.0.0/24"
 #     gateway: "192.168.1.254"
 #     interface: "vmbr1"
 

@@ -1,0 +1,6 @@
+{% for route in anro_proxmox_custom_routes %}
+auto {{ route.interface }}
+iface {{ route.interface }} inet static
+    post-up ip route add {{ route.network }} via {{ route.gateway }} dev {{ route.interface }}
+
+{% endfor %}
