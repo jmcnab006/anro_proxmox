@@ -51,4 +51,4 @@
     components:
       - pve-enterprise
     signed_by: "{{ anro_proxmox_keyring }}"
-  when: anro_proxmox_ceph_enabled | bool
+ # when: anro_proxmox_ceph_enabled | bool
