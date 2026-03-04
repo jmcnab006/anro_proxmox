@@ -18,6 +18,11 @@ argument_specs:
         default: false
         description: 'Flag to determine if packages should be updated.'
 
+      anro_proxmox_enable_repos:
+        type: 'bool'
+        default: false
+        description: 'Flag to determine if repositories should be updated. False indicates they are configured manually'
+
       anro_proxmox_keyring:
         type: 'str'
         default: '/usr/share/keyrings/proxmox-archive-keyring.gpg'

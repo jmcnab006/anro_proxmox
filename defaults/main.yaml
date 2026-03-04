@@ -3,6 +3,7 @@ anro_proxmox_enterprise_license: false
 
 # APT/UPDATES
 anro_proxmox_apply_updates: false
+# Manual repository configuration if set to false
 anro_proxmox_enable_repos: false
 
 anro_proxmox_keyring: /usr/share/keyrings/proxmox-archive-keyring.gpg
