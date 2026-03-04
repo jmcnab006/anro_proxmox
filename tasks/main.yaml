@@ -12,6 +12,8 @@
   tags:
     - repositories
     - proxmox
+  when:
+    - anro_proxmox_enable_repos | bool
 
 - name: "Update system packages"
   ansible.builtin.include_tasks: "packages.yaml"
