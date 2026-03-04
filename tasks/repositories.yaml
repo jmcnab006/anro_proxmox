@@ -9,7 +9,7 @@
     name: proxmox
     enabled: "{{ not anro_proxmox_enterprise_license | bool }}"
     types: deb
-    uris: https://download.proxmox.com/debian/pve
+    uris: http://download.proxmox.com/debian/pve
     suites: "{{ ansible_distribution_release }}"
     components:
       - pve-no-subscription
@@ -20,12 +20,12 @@
     name: ceph
     enabled: "{{ not anro_proxmox_enterprise_license | bool }}"
     types: deb
-    uris: https://download.proxmox.com/debian/ceph-squid
+    uris: http://download.proxmox.com/debian/ceph-squid
     suites: "{{ ansible_distribution_release }}"
     components:
       - no-subscription
     signed_by: "{{ anro_proxmox_keyring }}"
-  when: anro_proxmox_ceph_enabled | bool
+# when: anro_proxmox_ceph_enabled | bool
 
 # --- ENTERPRISE REPO ---
 
