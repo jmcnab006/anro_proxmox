@@ -111,26 +111,6 @@ Use the name of the role directory in the `roles:` list to use it in your playbo
             comment: "virtual_switch0 bridge"
 
 ```
-### Git submodules
-
-Add the role to your deployment repository as a submodule into a `roles/` directory. Set the submodule to track the `main` branch.
-
-```shell
-git submodule add https://github.com/jmcnab006/anro_proxmox.git roles/anro_proxmox
-git config -f .gitmodules submodule.roles/anro_proxmox.branch main
-```
-
-To pull changes to all submodules, add the `--recurse-submodules` when pulling your deployment repository.
-
-```shell
-git pull--recurse-submodules
-```
-
-Optionally, set your deployment repository to automatically pull all submodules with `git pull`.
-
-```shell
-git config submodule.recurse true
-```
 
 ## Role variables
 
